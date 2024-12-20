@@ -1,1 +1,2 @@
 CREATE DATABASE beers;
+CREATE DATABASE beerrating;
