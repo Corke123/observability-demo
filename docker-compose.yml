@@ -10,6 +10,57 @@ services:
             POSTGRES_PASSWORD: password
         volumes:
             - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-            - ./local-data:/var/lib/postgresql/data
+            - ./local-data/postgres:/var/lib/postgresql/data
         ports:
             - 5432:5432
+    prometheus:
+        container_name: prometheus
+        image: prom/prometheus:v3.0.1
+        extra_hosts: ['host.docker.internal:host-gateway']
+        command:
+            - --enable-feature=exemplar-storage
+            - --web.enable-remote-write-receiver
+            - --config.file=/etc/prometheus/prometheus.yml
+        volumes:
+            - prometheus:/prometheus
+            - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        ports:
+            - 9090:9090
+    grafana:
+        container_name: grafana
+        image: grafana/grafana:11.4.0
+        extra_hosts: ['host.docker.internal:host-gateway']
+        environment:
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+            - GF_AUTH_DISABLE_LOGIN_FORM=true
+        volumes:
+            - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+            - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+            - ./docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+            - ./docker/grafana/provisioning/alerting:/etc/grafana/provisioning/alerting:ro
+        ports:
+            - 3000:3000
+    tempo:
+        container_name: tempo
+        image: grafana/tempo:latest
+        extra_hosts: ['host.docker.internal:host-gateway']
+        command: ['-config.file=/etc/tempo.yml']
+        volumes:
+            - ./local-data/tempo:/tmp/tempo
+            - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro
+        ports:
+            - 3200:3200    # tempo
+            - 9411:9411    # zipkin
+    loki:
+        container_name: loki
+        image: grafana/loki:main-a3808b6
+        extra_hosts: ['host.docker.internal:host-gateway']
+        command: ['-config.file=/etc/loki/local-config.yaml']
+        ports:
+            - 3100:3100
+volumes:
+  prometheus:
+    driver: local
+  tempo:
+    driver: local
