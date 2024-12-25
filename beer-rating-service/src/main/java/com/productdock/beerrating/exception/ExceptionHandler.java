@@ -1,4 +1,4 @@
-package com.productdock.beerservice.beer.exception;
+package com.productdock.beerrating.exception;
 
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
@@ -7,21 +7,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.ServerHttpObservationFilter;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 @RequiredArgsConstructor
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final Tracer tracer;
 
-    @ExceptionHandler(BeerNotFoundException.class)
-    ProblemDetail handleBeerNotFoundException(HttpServletRequest request, BeerNotFoundException beerNotFoundException) {
-        return handleError(request, beerNotFoundException, NOT_FOUND);
+    @org.springframework.web.bind.annotation.ExceptionHandler(Throwable.class)
+    ProblemDetail onThrowable(HttpServletRequest request, Throwable error) {
+        return handleError(request, error, INTERNAL_SERVER_ERROR);
     }
 
     private ProblemDetail handleError(HttpServletRequest request, Throwable error, HttpStatus status) {
@@ -35,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ProblemDetail createProblemDetail(HttpStatus status, Throwable error) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setTitle(status.getReasonPhrase());
-        problemDetail.setDetail(error.getMessage());
+        problemDetail.setDetail(error.toString());
         problemDetail.setProperty("series", status.series());
         problemDetail.setProperty("cause", error.getCause());
         problemDetail.setProperty("traceparent", getTraceParent());

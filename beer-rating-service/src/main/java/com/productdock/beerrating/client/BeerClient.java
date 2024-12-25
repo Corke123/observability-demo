@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "beer", configuration = FeignClientConfig.class)
+@FeignClient(name = "beer")
 public interface BeerClient {
 
     @GetMapping("/beers/{beerId}/validate")
