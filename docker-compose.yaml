@@ -1,0 +1,15 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    extra_hosts: [ 'host.docker.internal:host-gateway' ]
+    restart: always
+    environment:
+      POSTGRES_DB: testdb
+      # POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./local-data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
