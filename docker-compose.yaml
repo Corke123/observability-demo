@@ -39,6 +39,17 @@ services:
       - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
     ports:
       - "3000:3000"
+  tempo:
+    container_name: tempo
+    image: grafana/tempo:latest
+    extra_hosts: ['host.docker.internal:host-gateway']
+    command: ['-config.file=/etc/tempo.yml']
+    volumes:
+      - ./local-data/tempo:/tmp/tempo
+      - ./docker/grafana/tempo.yml:/etc/tempo.yml:ro
+    ports:
+      - 3200:3200    # tempo
+      - 9411:9411    # zipkin
 volumes:
   prometheus:
     driver: local
