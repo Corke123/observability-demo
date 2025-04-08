@@ -26,6 +26,13 @@ services:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
+  loki:
+    container_name: loki
+    image: grafana/loki:main-a3808b6
+    extra_hosts: ['host.docker.internal:host-gateway']
+    command: ['-config.file=/etc/loki/local-config.yaml']
+    ports:
+      - "3100:3100"
   grafana:
     container_name: grafana
     image: grafana/grafana:11.4.0
