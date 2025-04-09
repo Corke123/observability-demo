@@ -53,7 +53,7 @@ public class RateBeerSimulation extends Simulation {
     {
         System.out.println(("duration: %s".formatted(duration)));
         System.out.println(("constantUsersPerSec: %d".formatted(usersPerSecond)));
-        setUp(scenario("steepTea")
+        setUp(scenario("rateBeer")
                 .exec(rateRandomBeer)
                 .injectOpen(constantUsersPerSec(usersPerSecond).during(duration))
         ).protocols(httpProtocol);
