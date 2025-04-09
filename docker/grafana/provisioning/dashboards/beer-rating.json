@@ -87,7 +87,7 @@
             },
             "gridPos": {
                 "h": 9,
-                "w": 8,
+                "w": 11,
                 "x": 0,
                 "y": 0
             },
@@ -198,8 +198,8 @@
             },
             "gridPos": {
                 "h": 9,
-                "w": 8,
-                "x": 8,
+                "w": 13,
+                "x": 11,
                 "y": 0
             },
             "id": 8,
@@ -374,6 +374,6 @@
     "timezone": "",
     "title": "Beer Rating",
     "uid": "280lKAr7k",
-    "version": 1,
+    "version": 2,
     "weekStart": "monday"
 }
