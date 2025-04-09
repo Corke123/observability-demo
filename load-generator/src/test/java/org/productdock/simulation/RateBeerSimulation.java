@@ -18,7 +18,9 @@ public class RateBeerSimulation extends Simulation {
     final Duration duration = Duration.ofMinutes(30);
     final int usersPerSecond = 5;
 
-    final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:8080").contentTypeHeader(ApplicationJson()).acceptHeader(ApplicationJson());
+    final HttpProtocolBuilder httpProtocol = http.baseUrl("http://localhost:8080")
+            .contentTypeHeader(ApplicationJson())
+            .acceptHeader(ApplicationJson());
 
     final ChainBuilder rateRandomBeer = exec(session -> session
             .set("beerId", generateRandomBeerId())
